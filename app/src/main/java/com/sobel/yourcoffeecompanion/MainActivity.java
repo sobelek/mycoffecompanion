@@ -1,7 +1,10 @@
 package com.sobel.yourcoffeecompanion;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,13 +38,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView textView;
 
-    private String userpass;
+    public String userpass;
+
+    private String points;
+
+    String textpass;
+    Context context;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
+        context = this;
 
         buttonLogin = (Button) findViewById(R.id.loginBtn);
         buttonRegister = (Button) findViewById(R.id.registerBtn);
@@ -59,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void userSingIn(){
 
+
         String cardId = editcard.getText().toString().trim();
 
 
@@ -69,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         APIService service = retrofit.create(APIService.class);
 
-        User user = new User();
+        final User user = new User();
         user.setCardId(cardId);
 
         Call<Result> call = service.loginUser(
@@ -81,16 +96,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
 
-                Toast.makeText(getApplicationContext(), response.body().getSuccess(), Toast.LENGTH_LONG).show();
-
-                Log.i("A", "elo");
+                Toast.makeText(getApplicationContext(), response.body().getPassword(), Toast.LENGTH_LONG).show();
+                userpass = response.body().getPassword();
+                points = response.body().getPoints();
+                if (userpass.equals(textpass)){
+                    Intent i = new Intent(context, MainMenuActivity.class);
+                    i.putExtra("points", points);
+                    startActivity(i);
+                }
 
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                Log.i("A", "elo2");
+
             }
         });
 
@@ -98,25 +118,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
      @Override
     public void onClick(View view){
         if (view == buttonRegister){
             Intent i = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(i);
-        }else if (view == buttonLogin){
+        }else if (view == buttonLogin) {
+            textpass = editpass.getText().toString();
             userSingIn();
-            /*Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);*/
+
+
         }
 
-
-
-     }
-
-
-
+    }
 
 
 
@@ -126,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 }
+
+
 
 
 
