@@ -28,8 +28,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private TextView textView;
 
-    private String userpass;
-
+    private String textpass;
+    private String textid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +73,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         call.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-                Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
 
-                Log.i("A", "elo");
+                if(response.body().getSuccess() == 1){
+                    Toast.makeText(getApplicationContext(), "Rejestracja pomyślna", Toast.LENGTH_SHORT).show();
+                }
+                //Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+
+
 
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                Log.i("A", "elo2");
             }
         });
 
@@ -94,8 +97,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view){
 
         if (view == buttonRegister) {
-            userSingUp();
+            textid = editcard.getText().toString().trim();
+            textpass = editpass.getText().toString().trim();
+            if(textid.isEmpty() || textpass.isEmpty()){
+                Toast.makeText(getApplicationContext(), "Nie wprowadzono hasła lub numeru karty", Toast.LENGTH_SHORT).show();
 
+            }else {
+                userSingUp();
+            }
 
         }else if(view == buttonback){
             Intent i = new Intent(RegisterActivity.this, MainActivity.class);

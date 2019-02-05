@@ -212,7 +212,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="4dp"
         android:elevation="0dp"
         android:text="Wyloguj"
@@ -221,7 +221,8 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/menuToolbar"
         app:layout_constraintEnd_toEndOf="@+id/menuToolbar"
-        app:layout_constraintTop_toTopOf="@+id/menuToolbar" />
+        app:layout_constraintTop_toTopOf="@+id/menuToolbar"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ProgressBar
         android:id="@+id/pointsProgress"
@@ -231,7 +232,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
-        android:max="20"
+        android:max="100"
         android:min="0"
         android:progress="1"
         app:layout_constraintEnd_toEndOf="parent"

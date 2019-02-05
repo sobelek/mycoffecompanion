@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String points;
 
     String textpass;
+    String textid;
+    String message;
     Context context;
 
 
@@ -95,16 +97,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         call.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
+                if(response.body().getSuccess() == 1) {
+                    userpass = response.body().getPassword();
+                    points = response.body().getPoints();
 
-                Toast.makeText(getApplicationContext(), response.body().getPassword(), Toast.LENGTH_LONG).show();
-                userpass = response.body().getPassword();
-                points = response.body().getPoints();
-                if (userpass.equals(textpass)){
-                    Intent i = new Intent(context, MainMenuActivity.class);
-                    i.putExtra("points", points);
-                    startActivity(i);
+                    /*message = response.body().getMessage().trim();*/
+               /* if(message.equals("No product found")){
+                    Toast.makeText(getApplicationContext(), "Karta nie jest aktywna", Toast.LENGTH_SHORT).show();
+
+                }*/
+                    if (userpass.equals(textpass)) {
+                        Toast.makeText(getApplicationContext(), "Zalogowano pomyślnie", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(context, MainMenuActivity.class);
+                        i.putExtra("points", points);
+                        startActivity(i);
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Wprowadzono błędne hasło", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    message = response.body().getMessage();
+                    if(message.equals("No product found")) {
+                        Toast.makeText(getApplicationContext(), "Karta nie jest aktywna", Toast.LENGTH_SHORT).show();
+                    }
                 }
-
             }
 
             @Override
@@ -124,9 +140,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent i = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(i);
         }else if (view == buttonLogin) {
-            textpass = editpass.getText().toString();
-            userSingIn();
 
+            textpass = editpass.getText().toString().trim();
+            textid = editcard.getText().toString().trim();
+
+            if(textpass.isEmpty() || textid.isEmpty()){
+                Toast.makeText(getApplicationContext(), "Nie wprowadzono hasła lub numeru karty", Toast.LENGTH_LONG).show();
+
+            }else {
+
+                userSingIn();
+            }
 
         }
 
